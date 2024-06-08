@@ -1,0 +1,47 @@
+import random
+
+def player(prev_play, opponent_history=[]):
+    if prev_play:
+        opponent_history.append(prev_play)
+    
+    # Use a dictionary to keep track of what the opponent usually plays after their previous move
+    opponent_patterns = {}
+    for i in range(1, len(opponent_history)):
+        prev_move = opponent_history[i-1]
+        next_move = opponent_history[i]
+        if prev_move in opponent_patterns:
+            if next_move in opponent_patterns[prev_move]:
+                opponent_patterns[prev_move][next_move] += 1
+            else:
+                opponent_patterns[prev_move][next_move] = 1
+        else:
+            opponent_patterns[prev_move] = {next_move: 1}
+    
+    # Predict the opponent's next move based on their previous move
+    if prev_play and prev_play in opponent_patterns:
+        likely_next_move = max(opponent_patterns[prev_play], key=opponent_patterns[prev_play].get)
+        if likely_next_move == 'R':
+            return 'P'  # Paper beats Rock
+        elif likely_next_move == 'P':
+            return 'S'  # Scissors beats Paper
+        elif likely_next_move == 'S':
+            return 'R'  # Rock beats Scissors
+    
+    # Default move (for the first move)
+    return random.choice(['R', 'P', 'S'])
+
+# Testing code (not part of the function, used for development)
+if __name__ == "__main__":
+    from RPS_game import play, quincy, mrugesh, abbey, kris
+    
+    print("Playing against quincy...")
+    play(player, quincy, 1000, verbose=True)
+    
+    print("Playing against mrugesh...")
+    play(player, mrugesh, 1000, verbose=True)
+    
+    print("Playing against abbey...")
+    play(player, abbey, 1000, verbose=True)
+    
+    print("Playing against kris...")
+    play(player, kris, 1000, verbose=True)￼Enter
